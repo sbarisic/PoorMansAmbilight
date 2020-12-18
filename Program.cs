@@ -14,10 +14,8 @@ namespace PoorMansAmbilight {
 
 		[STAThread]
 		static void Main(string[] args) {
-			PixelColor[] Colors = Utils.GenerateColors().ToArray();
-
-			float Dist = Utils.Distance(new PixelColor(255, 0, 0), new PixelColor(0, 255, 0));
-			Dist = Utils.Distance(new PixelColor(255, 0, 255), new PixelColor(0, 0, 255));
+			Colors = Utils.GenerateColors().ToArray();
+			Dists = new float[Colors.Length];
 
 			Application.EnableVisualStyles();
 			ColorForm = new ColorDisplayForm();
@@ -30,7 +28,7 @@ namespace PoorMansAmbilight {
 		}
 
 		static void Thread2() {
-			AuraSDK.Init();
+			RGB_SDK.Init();
 
 			DesktopDuplicator Dupl = new DesktopDuplicator(0);
 			Dupl.OnFrame += OnFrame;
@@ -45,33 +43,36 @@ namespace PoorMansAmbilight {
 		}
 
 		static int FrameCtr = 0;
+		static PixelColor[] Colors;
+		static float[] Dists;
 
 		static void OnFrame(DesktopDuplicator This, int W, int H) {
-			int Offset = 50;
+			int Offset = 60;
 
-			int R = 0;
-			int G = 0;
-			int B = 0;
-			int Samples = 0;
+			ulong R = 0;
+			ulong G = 0;
+			ulong B = 0;
+			ulong Samples = 0;
 
 			for (int Y = 0; Y < H; Y += Offset)
 				for (int X = 0; X < W; X += Offset) {
 					PixelColor P = This.GetPixel(X, Y);
 
-					R += P.R * P.R;
-					G += P.G * P.G;
-					B += P.B * P.B;
+					R += (ulong)P.R * (ulong)P.R;
+					G += (ulong)P.G * (ulong)P.G;
+					B += (ulong)P.B * (ulong)P.B;
 					Samples++;
 				}
 
-			int AvgR = (byte)Math.Sqrt(R / Samples);
-			int AvgG = (byte)Math.Sqrt(G / Samples);
-			int AvgB = (byte)Math.Sqrt(B / Samples);
+			byte AvgR = (byte)Math.Sqrt(R / Samples);
+			byte AvgG = (byte)Math.Sqrt(G / Samples);
+			byte AvgB = (byte)Math.Sqrt(B / Samples);
 
-			Contrast(ref AvgR, ref AvgG, ref AvgB, 50);
+			ColorForm.SetColor(AvgR, AvgG, AvgB);
 
-			AuraSDK.SetRGB((byte)AvgR, (byte)AvgG, (byte)AvgB);
-			ColorForm.SetColor((byte)AvgR, (byte)AvgG, (byte)AvgB);
+
+			RGB_SDK.SetRGB(AvgR, AvgG, AvgB);
+			ColorForm.SetColor2(AvgR, AvgG, AvgB);
 
 			Console.WriteLine("Frame {0}, samples {1}", FrameCtr++, Samples);
 		}

@@ -19,7 +19,12 @@ namespace PoorMansAmbilight {
 		}
 
 		public void SetColor(byte R, byte G, byte B) {
-			BackColor = Color.FromArgb(R, G, B);
+			// BackColor = Color.FromArgb(R, G, B);
+			panel1.BackColor = Color.FromArgb(R, G, B);
+		}
+
+		public void SetColor2(byte R, byte G, byte B) {
+			panel2.BackColor = Color.FromArgb(R, G, B);
 		}
 	}
 }

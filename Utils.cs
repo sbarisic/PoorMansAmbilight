@@ -61,11 +61,28 @@ namespace PoorMansAmbilight {
 			return Idx;
 		}
 
+		public static int Clamp(int Val, int Nearest) {
+			return (int)(Math.Round((float)Val / Nearest) * Nearest);
+		}
+
+		public static PixelColor Clamp(PixelColor Clr, int Nearest) {
+			return new PixelColor((byte)Clamp(Clr.R, Nearest), (byte)Clamp(Clr.G, Nearest), (byte)Clamp(Clr.B, Nearest));
+		}
+
 		public static IEnumerable<PixelColor> GenerateColors() {
+			int SSteps = 5;
+			int VSteps = 10;
+
+			yield return new PixelColor(0, 0, 0);
+			yield return new PixelColor(255, 255, 255);
+
 			for (int H = 0; H < 360; H++) {
-				for (int S = 0; S < 10; S++) {
-					for (int V = 0; V < 10; V++) {
-						yield return new HSVColor(H, (byte)((S * 10) / 100.0 * 255), (byte)((V * 10) / 100.0 * 255));
+				for (int S = 0; S < SSteps; S++) {
+					for (int V = 0; V < VSteps; V++) {
+						byte SVal = (byte)(((100.0f / 5) * S) / 100.0f * 255);
+						byte VVal = (byte)(((100.0f / 5) * S) / 100.0f * 255);
+
+						yield return new HSVColor(H, SVal, VVal);
 					}
 				}
 			}

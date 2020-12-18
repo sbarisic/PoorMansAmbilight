@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PoorMansAmbilight {
-	static class AuraSDK {
+	static class RGB_SDK {
 		public static void Init() {
 			Console.WriteLine("Init Aura RGB");
 		}

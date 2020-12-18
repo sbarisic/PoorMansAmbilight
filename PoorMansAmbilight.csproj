@@ -48,7 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AuraSDK.cs" />
+    <Compile Include="RGB_SDK.cs" />
     <Compile Include="ColorDisplayForm.cs">
       <SubType>Form</SubType>
     </Compile>
